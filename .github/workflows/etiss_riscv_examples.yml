@@ -40,7 +40,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: demo-install
-        github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        github-token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
         repository: tum-ei-eda/seal5
         path: /home/runner/work/seal5_prebuilt
         run-id: ${{ github.event.client_payload.triggered_run_id }}
@@ -91,7 +91,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: etiss_prebuilt
-          github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          github-token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
           path: /home/runner/work/etiss_prebuilt
           repository: tum-ei-eda/etiss_riscv_test_env
           run-id: ${{ github.event.client_payload.etiss_run_id }}
@@ -100,7 +100,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: etiss-riscv-examples-prebuilt
-          github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          github-token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
           path: install
 
       - name: Run ETISS Default Configuration Test
