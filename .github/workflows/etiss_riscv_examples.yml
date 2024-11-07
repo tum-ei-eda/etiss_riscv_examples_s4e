@@ -21,7 +21,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-         ref: s4emac
          submodules: recursive
 
     - name: Download Cached Seal5 Binaries
