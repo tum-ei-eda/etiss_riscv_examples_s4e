@@ -10,7 +10,7 @@ env:
   ETISS_PREBUILT_DIR: /home/runner/work/etiss_prebuilt
   RISCV_GCC_PREFIX: ${{ github.workspace }}/../gnu
   RISCV_GCC_NAME: riscv32-unknown-elf
-  ARCH: rv32imc_xs4emac
+  ARCH: rv32im_zicsr_zifencei_xs4emac
   ETISS_ARCH: RV32IMCXS4EMAC
   PROG: s4emac
   ABI: ilp32
@@ -59,9 +59,9 @@ jobs:
       name: Download RISCV-GNU-Toolchain
       run: |
          cd ..
-         wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/2023.09.27/Ubuntu/22.04/rv32imc_ilp32.tar.xz
-         tar xvf rv32imc_ilp32.tar.xz
-         rm rv32imc_ilp32.tar.xz
+         wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/2024.09.03/Ubuntu/22.04/rv32im_ilp32.tar.xz
+         tar xvf rv32im_zicsr_zifencei_ilp32.tar.xz
+         rm rv32im_zicsr_zifencei_ilp32.tar.xz
 
     - name: Build ETISS RISCV Examples for Testing
       run: |
