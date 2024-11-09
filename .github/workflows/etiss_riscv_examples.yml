@@ -57,9 +57,10 @@ jobs:
 
     - if: ${{ steps.cache-gcc.outputs.cache-hit != 'true' }}
       name: Download RISCV-GNU-Toolchain
+      # TODO: skip step on cache match
       run: |
          cd ..
-         wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/2024.09.03/Ubuntu/22.04/rv32im_ilp32.tar.xz
+         wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/2024.09.03/Ubuntu/22.04/rv32im_zicsr_zifencei_ilp32.tar.xz
          tar xvf rv32im_zicsr_zifencei_ilp32.tar.xz
          rm rv32im_zicsr_zifencei_ilp32.tar.xz
 
