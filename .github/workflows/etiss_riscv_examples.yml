@@ -61,7 +61,10 @@ jobs:
       run: |
          cd ..
          wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/2024.09.03/Ubuntu/22.04/rv32im_zicsr_zifencei_ilp32.tar.xz
-         tar xvf rv32im_zicsr_zifencei_ilp32.tar.xz
+         mkdir gnu
+         cd gnu
+         tar xvf ../rv32im_zicsr_zifencei_ilp32.tar.xz
+         cd ..
          rm rv32im_zicsr_zifencei_ilp32.tar.xz
 
     - name: Build ETISS RISCV Examples for Testing
