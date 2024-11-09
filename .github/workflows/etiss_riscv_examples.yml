@@ -86,7 +86,7 @@ jobs:
 
     - name: Build ETISS RISCV Examples for Testing
       run: |
-        export PATH=$SEAL5_PREBUILT_DIR/bin/
+        export PATH=$SEAL5_PREBUILT_DIR/bin/:$PATH
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
         cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=rv32gc-llvm-toolchain.cmake -DBUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX=$(pwd)/install -DRISCV_ARCH=${{ matrix.tc.arch }} -DRISCV_ABI=${{ matrix.tc.abi }} -DRISCV_TOOLCHAIN_PREFIX=$(pwd)/gnu/ -DRISCV_TOOLCHAIN_BASENAME=${{ matrix.tc.name }} ..
         cmake --build build -j$(nproc)
