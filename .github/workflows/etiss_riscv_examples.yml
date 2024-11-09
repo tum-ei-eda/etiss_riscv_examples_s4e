@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         ubuntu-version:
-        - 22
+        - 22.04
         build_type:
         - Release
         - Debug
@@ -41,9 +41,9 @@ jobs:
         cache-name: cache-seal5-binaries
       with:
         path: /home/runner/work/seal5_prebuilt
-        key: seal5-binaries-${{ matrix.os }}-${{ steps.date.outputs.date }}
+        key: seal5-binaries-${{ matrix.ubuntu-version }}-${{ steps.date.outputs.date }}
         restore-keys: |
-          seal5-binaries-${{ matrix.os }}-
+          seal5-binaries-${{ matrix.ubuntu-version }}-
           seal5-binaries-
 
     - if: ${{ steps.cache-seal5.outputs.cache-hit != 'true'  &&  github.event_name == 'repository_dispatch' }}
@@ -63,17 +63,17 @@ jobs:
         cache-name: cache-gcc-binaries
       with:
         path: gnu/
-        key: gcc-binaries-${{ matrix.os }}-${{ matrix.tc.version }}-${{ matrix.tc.variant }}-${{ steps.date.outputs.date }}
+        key: gcc-binaries-${{ matrix.ubuntu-version }}-${{ matrix.tc.version }}-${{ matrix.tc.variant }}-${{ steps.date.outputs.date }}
         restore-keys: |
-          gcc-binaries-${{ matrix.os }}-${{ matrix.tc.version }}-${{ matrix.tc.variant }}
-          gcc-binaries-${{ matrix.os }}
+          gcc-binaries-${{ matrix.ubuntu-version }}-${{ matrix.tc.version }}-${{ matrix.tc.variant }}
+          gcc-binaries-${{ matrix.ubuntu-version }}
           gcc-binaries-
 
     - if: ${{ steps.cache-gcc.outputs.cache-hit != 'true' }}
       name: Download RISCV-GNU-Toolchain
       # TODO: skip step on cache match
       run: |
-         wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/${{ matrix.tc.version }}/Ubuntu/${{ matrix.ubuntu-version }}.04/${{ matrix.tv.variant }}.tar.xz
+         wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/${{ matrix.tc.version }}/Ubuntu/${{ matrix.ubuntu-version }}/${{ matrix.tv.variant }}.tar.xz
          mkdir gnu
          cd gnu
          tar xvf ../${{ matrix.tc.variant }}.tar.xz
@@ -96,7 +96,7 @@ jobs:
     - name: Upload ETISS RISCV Built Example Files
       uses: actions/upload-artifact@v4
       with:
-         name: etiss-riscv-examples-prebuilt-${{ matrix.os }}-${{ matrix.build_type }}-${{ matrix.tc.version }}-${{ matrix.tc.variant }}-${{ matrix.tc.arch }}-${{ matrix.tc.abi }}
+         name: etiss-riscv-examples-prebuilt-${{ matrix.ubuntu-version }}-${{ matrix.build_type }}-${{ matrix.tc.version }}-${{ matrix.tc.variant }}-${{ matrix.tc.arch }}-${{ matrix.tc.abi }}
          path: install/
 
   run-riscv-examples:
@@ -106,7 +106,7 @@ jobs:
       fail-fast: false
       matrix:
         ubuntu-version:
-        - 22
+        - 22.04
         build_type:
         - Release
         - Debug
@@ -129,7 +129,7 @@ jobs:
       - name: Download ETISS RISCV Examples Artifact
         uses: actions/download-artifact@v4
         with:
-          name: etiss-riscv-examples-prebuilt-${{ matrix.os }}-${{ matrix.build_type }}-${{ matrix.tc.version }}-${{ matrix.tc.variant }}-${{ matrix.tc.arch }}-${{ matrix.tc.abi }}
+          name: etiss-riscv-examples-prebuilt-${{ matrix.ubuntu-version }}-${{ matrix.build_type }}-${{ matrix.tc.version }}-${{ matrix.tc.variant }}-${{ matrix.tc.arch }}-${{ matrix.tc.abi }}
           github-token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
           path: install
 
