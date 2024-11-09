@@ -12,15 +12,17 @@ env:
 jobs:
   compile-riscv-examples:
     runs-on: ubuntu-${{ matrix.ubuntu-version }}
-    matrix:
-      ubuntu-version:
-      - 22
-      build_type:
-      - Release
-      - Debug
-      tc:
-      - {version: 2024.09.03, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_s4emac, abi: ilp32}
-      - {version: 2024.09.03_gcc14, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_s4emac, abi: ilp32}
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu-version:
+        - 22
+        build_type:
+        - Release
+        - Debug
+        tc:
+        - {version: 2024.09.03, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_s4emac, abi: ilp32}
+        - {version: 2024.09.03_gcc14, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_s4emac, abi: ilp32}
 
     steps:
     - uses: actions/checkout@v4
@@ -100,18 +102,20 @@ jobs:
   run-riscv-examples:
     needs: compile-riscv-examples
     runs-on: ubuntu-${{ matrix.ubuntu-version }}
-    matrix:
-      ubuntu-version:
-      - 22
-      build_type:
-      - Release
-      - Debug
-      tc:
-      - {version: 2024.09.03, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_s4emac, abi: ilp32}
-      - {version: 2024.09.03_gcc14, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_s4emac, abi: ilp32}
-      config:
-      - {prog: hello_world, etiss_arch: RV32IMCXS4EMAC}
-      - {prog: s4emac, etiss_arch: RV32IMCXS4EMAC}
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu-version:
+        - 22
+        build_type:
+        - Release
+        - Debug
+        tc:
+        - {version: 2024.09.03, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_s4emac, abi: ilp32}
+        - {version: 2024.09.03_gcc14, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_s4emac, abi: ilp32}
+        config:
+        - {prog: hello_world, etiss_arch: RV32IMCXS4EMAC}
+        - {prog: s4emac, etiss_arch: RV32IMCXS4EMAC}
     steps:
       - name: Download Pre-built ETISS Artifact
         uses: actions/download-artifact@v4
