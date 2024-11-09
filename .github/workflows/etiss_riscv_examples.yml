@@ -112,9 +112,41 @@ jobs:
         tc:
         - {version: 2024.09.03, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xs4emac, abi: ilp32}
         - {version: 2024.09.03_gcc14, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xs4emac, abi: ilp32}
-        config:
-        - {prog: hello_world, etiss_arch: RV32IMCXS4EMAC}
-        - {prog: s4emac, etiss_arch: RV32IMCXS4EMAC}
+        etiss_arch:
+        - RV32IMAFDC
+        - RV32IMCXS4EMAC
+        prog:
+        - dhry
+        - embench_aha-mont64
+        - embench_crc32
+        - embench_cubic
+        - embench_edn
+        - embench_huffbench
+        - embench_matmult-int
+        - embench_md5sum
+        - embench_minver
+        - embench_nbody
+        - embench_nettle-aes
+        - embench_nettle-sha256
+        - embench_nsichneu
+        - embench_picojpeg
+        - embench_primecount
+        - embench_qrduino
+        - embench_sglib-combined
+        - embench_slre
+        - embench_st
+        - example_c
+        - example_cpp
+        - hello_world
+        - interactive
+        - semihosting_cpp
+        - test_cases
+        - tflm_toy
+        - tvm_toy
+        - s4emac
+        exclude:
+        - etiss_arch: RV32IMAFDC
+          prog: s4emac
     steps:
       - name: Download Pre-built ETISS Artifact
         uses: actions/download-artifact@v4
@@ -142,4 +174,10 @@ jobs:
           chmod +x $ETISS_PREBUILT_DIR/bin/bare_etiss_processor
           export LD_LIBRARY_PATH=$ETISS_PREBUILT_DIR/lib:$ETISS_PREBUILT_DIR/lib/plugins:$LD_LIBRRARY_PATH
           export PATH=$ETISS_PREBUILT_DIR/bin/:$PATH
-          bare_etiss_processor -iinstall/ini/${{ matrix.config.prog }}.ini --arch.cpu=${{ matrix.config.etiss_arch }}
+          bare_etiss_processor -iinstall/ini/${{ matrix.config.prog }}.ini --arch.cpu=${{ matrix.config.etiss_arch }} 2>&1 | tee out.txt
+
+    - name: Upload ETISS Outputs
+      uses: actions/upload-artifact@v4
+      with:
+         name: etiss-output-${{ matrix.prog }}-${{ matrix.etiss_arch }}-${{ matrix.ubuntu-version }}-${{ matrix.build_type }}-${{ matrix.tc.version }}-${{ matrix.tc.variant }}-${{ matrix.tc.arch }}-${{ matrix.tc.abi }}
+         path: out.txt
