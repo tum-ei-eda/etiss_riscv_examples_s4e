@@ -5,7 +5,7 @@ on:
     types: [ seal5-event ]
 
 env:
-  SEAL5_PREBUILT_DIR: /home/runner/work/seal5_prebuilt/release
+  SEAL5_PREBUILT_DIR: /home/runner/work/seal5_prebuilt/release  # TODO: change
   ETISS_PREBUILT_DIR: /home/runner/work/etiss_prebuilt
   PROG: s4emac
 
@@ -46,8 +46,8 @@ jobs:
           seal5-binaries-${{ matrix.ubuntu-version }}-
           seal5-binaries-
 
-    - if: ${{ steps.cache-seal5.outputs.cache-hit != 'true'  &&  github.event_name == 'repository_dispatch' }}
-      name: Download Seal5 Pre-built
+    - name: Download Seal5 Pre-built
+      if: steps.cache-seal5.outputs.cache-hit != 'true'
       uses: actions/download-artifact@v4
       with:
         name: demo-install  # TODO: add ubuntu version to artifact name
@@ -69,11 +69,10 @@ jobs:
           gcc-binaries-${{ matrix.ubuntu-version }}
           gcc-binaries-
 
-    - if: ${{ steps.cache-gcc.outputs.cache-hit != 'true' }}
-      name: Download RISCV-GNU-Toolchain
-      # TODO: skip step on cache match
+    - name: Download RISCV-GNU-Toolchain
+      if: steps.cache-gcc.outputs.cache-hit != 'true'
       run: |
-         wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/${{ matrix.tc.version }}/Ubuntu/${{ matrix.ubuntu-version }}/${{ matrix.tv.variant }}.tar.xz
+         wget https://syncandshare.lrz.de/dl/fi2p5Ds5PHktjmZGKzR9tx/GCC/default/${{ matrix.tc.version }}/Ubuntu/${{ matrix.ubuntu-version }}/${{ matrix.tc.variant }}.tar.xz
          mkdir gnu
          cd gnu
          tar xvf ../${{ matrix.tc.variant }}.tar.xz
