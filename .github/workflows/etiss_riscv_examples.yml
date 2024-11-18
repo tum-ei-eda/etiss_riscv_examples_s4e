@@ -5,7 +5,7 @@ on:
     types: [ seal5-event ]
 
 env:
-  SEAL5_PREBUILT_DIR: /home/runner/work/seal5_prebuilt/release  # TODO: change
+  SEAL5_PREBUILT_DIR: /home/runner/work/seal5_prebuilt
   ETISS_PREBUILT_DIR: /home/runner/work/etiss_prebuilt
   PROG: s4emac
 
