@@ -11,7 +11,7 @@ env:
 
 jobs:
   compile-riscv-examples-openasip:
-    if: ${{ github.event.client_payload.name == "openasip_demo" }}
+    if: ${{ github.event.client_payload.name }} == 'openasip_demo'
     runs-on: ubuntu-${{ matrix.ubuntu-version }}
     strategy:
       fail-fast: false
@@ -271,7 +271,7 @@ jobs:
           path: out.txt
 
   run-riscv-examples-s4e:
-    if: ${{ github.event.client_payload.name == "s4e_demo" }}
+    if: ${{ github.event.client_payload.name }} == 's4e_demo'
     needs: compile-riscv-examples-s4e
     runs-on: ubuntu-${{ matrix.ubuntu-version }}
     strategy:
