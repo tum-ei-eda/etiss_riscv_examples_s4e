@@ -205,7 +205,7 @@ jobs:
         - Release
         # - Debug
         tc:
-        - {version: 2024.09.03, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xopenasipbase, abi: ilp32d}
+        - {version: 2024.09.03, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32gc_xopenasipbase, abi: ilp32d}
         # - {version: 2024.09.03_gcc14, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xopenasipbase, abi: ilp32d}
         etiss_arch:
         - RV32IMAFDC
