@@ -11,7 +11,7 @@ env:
 
 jobs:
   compile-riscv-examples-openasip:
-    if: ${{ github.event.client_payload.name }} == 'openasip_demo'
+    if: github.event.client_payload.name == 'openasip_demo'
     runs-on: ubuntu-${{ matrix.ubuntu-version }}
     strategy:
       fail-fast: false
@@ -42,16 +42,16 @@ jobs:
         cache-name: cache-seal5-binaries
       with:
         path: /home/runner/work/seal5_prebuilt
-        key: seal5-binaries-${{ matrix.ubuntu-version }}-${{ steps.date.outputs.date }}
+        key: seal5-binaries-${{ github.event.client_payload.name }}-${{ matrix.ubuntu-version }}-${{ steps.date.outputs.date }}
         restore-keys: |
-          seal5-binaries-${{ matrix.ubuntu-version }}-
-          seal5-binaries-
+          seal5-binaries-${{ github.event.client_payload.name }}-${{ matrix.ubuntu-version }}-
+          seal5-binaries-${{ github.event.client_payload.name }}-
 
     - name: Download Seal5 Pre-built
       if: steps.cache-seal5.outputs.cache-hit != 'true'
       uses: actions/download-artifact@v4
       with:
-        name: demo-install  # TODO: add ubuntu version to artifact name
+        name: ${{ github.event.client_payload.name }}-install-ubuntu-${{ matrix.ubuntu-version }}-release
         github-token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
         repository: tum-ei-eda/seal5
         path: /home/runner/work/seal5_prebuilt
@@ -100,7 +100,7 @@ jobs:
         path: install/
 
   compile-riscv-examples-s4e:
-    if: ${{ github.event.client_payload.name }} == 's4e_demo'
+    if: github.event.client_payload.name == 's4e_demo'
     runs-on: ubuntu-${{ matrix.ubuntu-version }}
     strategy:
       fail-fast: false
@@ -131,16 +131,16 @@ jobs:
         cache-name: cache-seal5-binaries
       with:
         path: /home/runner/work/seal5_prebuilt
-        key: seal5-binaries-${{ matrix.ubuntu-version }}-${{ steps.date.outputs.date }}
+        key: seal5-binaries-${{ github.event.client_payload.name }}-${{ matrix.ubuntu-version }}-${{ steps.date.outputs.date }}
         restore-keys: |
-          seal5-binaries-${{ matrix.ubuntu-version }}-
-          seal5-binaries-
+          seal5-binaries-${{ github.event.client_payload.name }}-${{ matrix.ubuntu-version }}-
+          seal5-binaries-${{ github.event.client_payload.name }}-
 
     - name: Download Seal5 Pre-built
       if: steps.cache-seal5.outputs.cache-hit != 'true'
       uses: actions/download-artifact@v4
       with:
-        name: demo-install  # TODO: add ubuntu version to artifact name
+        name: ${{ github.event.client_payload.name }}-install-ubuntu-${{ matrix.ubuntu-version }}-release
         github-token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
         repository: tum-ei-eda/seal5
         path: /home/runner/work/seal5_prebuilt
@@ -189,7 +189,7 @@ jobs:
         path: install/
 
   run-riscv-examples-openasip:
-    if: ${{ github.event.client_payload.name }} == 'openasip_demo'
+    if: github.event.client_payload.name == 'openasip_demo'
     needs: compile-riscv-examples-openasip
     runs-on: ubuntu-${{ matrix.ubuntu-version }}
     strategy:
@@ -271,7 +271,7 @@ jobs:
           path: out.txt
 
   run-riscv-examples-s4e:
-    if: ${{ github.event.client_payload.name }} == 's4e_demo'
+    if: github.event.client_payload.name == 's4e_demo'
     needs: compile-riscv-examples-s4e
     runs-on: ubuntu-${{ matrix.ubuntu-version }}
     strategy:
