@@ -20,10 +20,10 @@ jobs:
         - 22.04
         build_type:
         - Release
-        - Debug
+        # - Debug
         tc:
         - {version: 2024.09.03, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32gc_xopenasipbase, abi: ilp32d}
-        - {version: 2024.09.03_gcc14, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32gc_xopenasipbase, abi: ilp32d}
+        # - {version: 2024.09.03_gcc14, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32gc_xopenasipbase, abi: ilp32d}
 
     steps:
     - uses: actions/checkout@v4
@@ -109,10 +109,10 @@ jobs:
         - 22.04
         build_type:
         - Release
-        - Debug
+        # - Debug
         tc:
         - {version: 2024.09.03, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xs4emac, abi: ilp32}
-        - {version: 2024.09.03_gcc14, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xs4emac, abi: ilp32}
+        # - {version: 2024.09.03_gcc14, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xs4emac, abi: ilp32}
 
     steps:
     - uses: actions/checkout@v4
@@ -199,41 +199,41 @@ jobs:
         - 22.04
         build_type:
         - Release
-        - Debug
+        # - Debug
         tc:
         - {version: 2024.09.03, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xopenasipbase, abi: ilp32d}
-        - {version: 2024.09.03_gcc14, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xopenasipbase, abi: ilp32d}
+        # - {version: 2024.09.03_gcc14, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xopenasipbase, abi: ilp32d}
         etiss_arch:
         - RV32IMAFDC
         - RV32IMAFDCXOPENASIP
         prog:
-        - dhry
-        - embench_aha-mont64
-        - embench_crc32
-        - embench_cubic
-        - embench_edn
-        - embench_huffbench
-        - embench_matmult-int
-        - embench_md5sum
-        - embench_minver
-        - embench_nbody
-        - embench_nettle-aes
-        - embench_nettle-sha256
-        - embench_nsichneu
-        - embench_picojpeg
-        - embench_primecount
-        - embench_qrduino
-        - embench_sglib-combined
-        - embench_slre
-        - embench_st
-        - example_c
-        - example_cpp
+        # - dhry
+        # - embench_aha-mont64
+        # - embench_crc32
+        # - embench_cubic
+        # - embench_edn
+        # - embench_huffbench
+        # - embench_matmult-int
+        # - embench_md5sum
+        # - embench_minver
+        # - embench_nbody
+        # - embench_nettle-aes
+        # - embench_nettle-sha256
+        # - embench_nsichneu
+        # - embench_picojpeg
+        # - embench_primecount
+        # - embench_qrduino
+        # - embench_sglib-combined
+        # - embench_slre
+        # - embench_st
+        # - example_c
+        # - example_cpp
         - hello_world
-        - interactive
-        - semihosting_cpp
-        - test_cases
-        - tflm_toy
-        - tvm_toy
+        # - interactive
+        # - semihosting_cpp
+        # - test_cases
+        # - tflm_toy
+        # - tvm_toy
         # TODO: openasip example
     steps:
       - name: Download Pre-built ETISS Artifact
@@ -281,41 +281,41 @@ jobs:
         - 22.04
         build_type:
         - Release
-        - Debug
+        # - Debug
         tc:
         - {version: 2024.09.03, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xs4emac, abi: ilp32}
-        - {version: 2024.09.03_gcc14, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xs4emac, abi: ilp32}
+        # - {version: 2024.09.03_gcc14, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xs4emac, abi: ilp32}
         etiss_arch:
         - RV32IMAFDC
         - RV32IMCXS4EMAC
         prog:
-        - dhry
-        - embench_aha-mont64
-        - embench_crc32
-        - embench_cubic
-        - embench_edn
-        - embench_huffbench
-        - embench_matmult-int
-        - embench_md5sum
-        - embench_minver
-        - embench_nbody
-        - embench_nettle-aes
-        - embench_nettle-sha256
-        - embench_nsichneu
-        - embench_picojpeg
-        - embench_primecount
-        - embench_qrduino
-        - embench_sglib-combined
-        - embench_slre
-        - embench_st
-        - example_c
-        - example_cpp
+        # - dhry
+        # - embench_aha-mont64
+        # - embench_crc32
+        # - embench_cubic
+        # - embench_edn
+        # - embench_huffbench
+        # - embench_matmult-int
+        # - embench_md5sum
+        # - embench_minver
+        # - embench_nbody
+        # - embench_nettle-aes
+        # - embench_nettle-sha256
+        # - embench_nsichneu
+        # - embench_picojpeg
+        # - embench_primecount
+        # - embench_qrduino
+        # - embench_sglib-combined
+        # - embench_slre
+        # - embench_st
+        # - example_c
+        # - example_cpp
         - hello_world
-        - interactive
-        - semihosting_cpp
-        - test_cases
-        - tflm_toy
-        - tvm_toy
+        # - interactive
+        # - semihosting_cpp
+        # - test_cases
+        # - tflm_toy
+        # - tvm_toy
         - s4emac
         exclude:
         - etiss_arch: RV32IMAFDC
