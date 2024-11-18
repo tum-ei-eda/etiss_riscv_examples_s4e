@@ -21,6 +21,8 @@ jobs:
         build_type:
         - Release
         # - Debug
+        progs:
+        - "hello_world"
         tc:
         - {version: 2024.09.03, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32gc_xopenasipbase, abi: ilp32d}
         # - {version: 2024.09.03_gcc14, variant: rv32gc_ilp32d, name: riscv32-unknown-elf, arch: rv32gc_xopenasipbase, abi: ilp32d}
@@ -90,7 +92,7 @@ jobs:
         export PATH=$SEAL5_PREBUILT_DIR/bin/:$PATH
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
         cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=rv32gc-llvm-toolchain.cmake -DBUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX=$(pwd)/install -DRISCV_ARCH=${{ matrix.tc.arch }} -DRISCV_ABI=${{ matrix.tc.abi }} -DRISCV_TOOLCHAIN_PREFIX=$(pwd)/gnu/ -DRISCV_TOOLCHAIN_BASENAME=${{ matrix.tc.name }}
-        cmake --build build -j$(nproc)
+        cmake --build build -j$(nproc) -t ${{ matrix.progs }}
         cmake --install build
 
     - name: Upload ETISS RISCV Built Example Files
@@ -110,6 +112,8 @@ jobs:
         build_type:
         - Release
         # - Debug
+        progs:
+        - "hello_world s4emac"
         tc:
         - {version: 2024.09.03, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xs4emac, abi: ilp32}
         # - {version: 2024.09.03_gcc14, variant: rv32im_zicsr_zifencei_ilp32, name: riscv32-unknown-elf, arch: rv32im_zicsr_zifencei_xs4emac, abi: ilp32}
@@ -179,7 +183,7 @@ jobs:
         export PATH=$SEAL5_PREBUILT_DIR/bin/:$PATH
         chmod +x $SEAL5_PREBUILT_DIR/bin/*
         cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=rv32gc-llvm-toolchain.cmake -DBUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX=$(pwd)/install -DRISCV_ARCH=${{ matrix.tc.arch }} -DRISCV_ABI=${{ matrix.tc.abi }} -DRISCV_TOOLCHAIN_PREFIX=$(pwd)/gnu/ -DRISCV_TOOLCHAIN_BASENAME=${{ matrix.tc.name }}
-        cmake --build build -j$(nproc)
+        cmake --build build -j$(nproc) -t ${{ matrix.progs }}
         cmake --install build
 
     - name: Upload ETISS RISCV Built Example Files
