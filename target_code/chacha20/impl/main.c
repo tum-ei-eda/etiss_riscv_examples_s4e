@@ -21,7 +21,7 @@ static inline uint32_t rolxor(uint32_t a, uint32_t b, int n) {
 
 //#define CHACHA_EXTENSION
 
-#ifndef CHACHA_EXTENSION
+#ifndef CHACHA_EXTENSION_CUSTOMISATION
 
 #pragma message "Building with pure C code"
 
