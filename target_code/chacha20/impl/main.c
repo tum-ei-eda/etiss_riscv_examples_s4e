@@ -1,123 +1,45 @@
 #include <stdio.h>
 #include <memory.h>
 #include <stdint.h>
-
 typedef unsigned char bool;
-
-uint32_t v[16];
 
 static inline uint32_t rol(uint32_t a, int n) {
     return (a << n) | (a >> (32 - n));
 }
 
-static inline uint32_t xor(uint32_t a, uint32_t b) {
-    return a ^ b;
+
+static inline void quarter_round(uint32_t* v, int a, int b, int c, int d) {
+    v[a] += v[b]; v[d] ^= v[a]; v[d] = rol(v[d], 16);
+    v[c] += v[d]; v[b] ^= v[c]; v[b] = rol(v[b], 12);
+    v[a] += v[b]; v[d] ^= v[a]; v[d] = rol(v[d],  8);
+    v[c] += v[d]; v[b] ^= v[c]; v[b] = rol(v[b],  7);
 }
-
-
-static inline uint32_t rolxor(uint32_t a, uint32_t b, int n) {
-    return rol(xor(a, b), n);
-}
-
-//#define CHACHA_EXTENSION
-
-#ifndef CHACHA_EXTENSION_CUSTOMISATION
-
-#pragma message "Building with pure C code"
-
-static inline void quarter_round(int a, int b, int c, int d) {
-    v[a] = v[a] + v[b];
-    v[d] = rolxor(v[d], v[a], 16);
-    v[c] = v[c] + v[d];
-    v[b] = rolxor(v[b], v[c], 12);
-    v[a] = v[a] + v[b];
-    v[d] = rolxor(v[d], v[a],  8);
-    v[c] = v[c] + v[d];
-    v[b] = rolxor(v[b], v[c],  7);
-}
-
-#else
-
-#pragma message "Building with CHACHA extension"
-
-#define USE_INTRINSICS
-
-#ifdef USE_INTRINSICS
-
-//#error DON'T USE THIS PATHWAY
-
-static inline void quarter_round(int a, int b, int c, int d) {
-    v[a] = v[a] + v[b];
-    v[d] = __builtin_xexample_chacha20_qr1(v[d], v[a]);
-    v[c] = v[c] + v[d];
-    v[b] = __builtin_xexample_chacha20_qr2(v[b], v[c]);
-    v[a] = v[a] + v[b];
-    v[d] = __builtin_xexample_chacha20_qr3(v[d], v[a]);
-    v[c] = v[c] + v[d];
-    v[b] = __builtin_xexample_chacha20_qr4(v[b], v[c]);
-}
-
-#else
-
-#error "Assembler version not yet written"
-
-#endif
-
-#endif
 
 
 void double_rounds(uint32_t output[16], const uint32_t input[16]) {
+    // Copy initial state into the state matrix
+    uint32_t v[16];
     memcpy(v, input, sizeof(v));
-
+    // Perform 20 rounds, alternating between columns and diagonals
     for(int i = 0; i < 20; i += 2) {
-        quarter_round( 0, 4, 8,12);
-        quarter_round( 1, 5, 9,13);
-        quarter_round( 2, 6,10,14);
-        quarter_round( 3, 7,11,15);
+        quarter_round(v, 0, 4, 8,12);
+        quarter_round(v, 1, 5, 9,13);
+        quarter_round(v, 2, 6,10,14);
+        quarter_round(v, 3, 7,11,15);
 
-        quarter_round( 0, 5,10,15);
-        quarter_round( 1, 6,11,12);
-        quarter_round( 2, 7, 8,13);
-        quarter_round( 3, 4, 9,14);
+        quarter_round(v, 0, 5,10,15);
+        quarter_round(v, 1, 6,11,12);
+        quarter_round(v, 2, 7, 8,13);
+        quarter_round(v, 3, 4, 9,14);
     }
-
+    // Sum the original input into the state matrix
+    // and copy the result to the output
     for(int i = 0; i < 16; ++i) {
         v[i] += input[i];
         output[i] = v[i];
     }
 }
 
-
-// Tests a single quarter round, using the sample numbers given in
-// in section 2.1.1 of the ChaCha20 RFC
-// https://datatracker.ietf.org/doc/html/rfc8439
-bool test_quarter_round() {
-    v[0] = 0x11111111;
-    v[1] = 0x01020304;
-    v[2] = 0x9b8d6f43;
-    v[3] = 0x01234567;
-    printf("Testing quarter_round()\n"
-           "  a = %08x\n"
-           "  b = %08x\n"
-           "  c = %08x\n"
-           "  d = %08x\n", v[0], v[1], v[2], v[3]);
-
-    quarter_round(0, 1, 2, 3);
-
-    printf("Updated values:\n"
-           "  a = %08x\n"
-           "  b = %08x\n"
-           "  c = %08x\n"
-           "  d = %08x\n", v[0], v[1], v[2], v[3]);
-
-    bool passed =
-        v[0] == 0xea2a92f4 &&
-        v[1] == 0xcb1cf8ce &&
-        v[2] == 0x4581472e &&
-        v[3] == 0x5881c4bb;
-    printf("test_quarter_round() %s\n", passed? "PASSED": "FAILED");
-    return passed;
-}
 
 // Generates the keystream for the first 64-byte block
 // from a 256-bit key with all IV fields other than 16 bytes
@@ -134,24 +56,19 @@ bool test_chacha_block() {
     iv[3] = 0x6b206574;
     memset(iv + 4, 0, sizeof(iv) - 16);
 
-#ifdef USE_INTRINSICS
-    printf("*** INTRINSIC FUNCTIONS IMPL ***\n");
-#else
-    printf("*** SIMPLE C FUNCTIONS IMPL ***\n");
-#endif
     uint64_t start_tick = __builtin_readcyclecounter();
     uint32_t cipher_state[16];
     double_rounds(cipher_state, iv);
     uint64_t end_tick = __builtin_readcyclecounter();
 
-    printf("Keystream:\n");
+    printf("Keystream:\n   ");
     // presumes little-endian
     uint8_t* ks = (uint8_t*) cipher_state;
     for(int r = 0; r < 8; ++r) {
         for(int c = 0; c < 8; ++c) {
             printf("%02x ", *ks++);
         }
-        printf("\n");
+        printf("\n   ");
     }
 
     //
@@ -166,17 +83,12 @@ bool test_chacha_block() {
         0xc3, 0x87, 0xb6, 0x69, 0xb2, 0xee, 0x65, 0x86
     };
     bool passed = memcmp(cipher_state, test_ks, sizeof(test_ks)) == 0;
-    printf("test_quarter_round() %s [%llu ticks]\n", passed? "PASSED": "FAILED", end_tick - start_tick);
+    printf("\ntest_quarter_round() %s [%llu ticks]\n", passed? "PASSED": "FAILED", end_tick - start_tick);
     return passed;
 }
 
 
-
-int main()
-{
-    //test_quarter_round();
-
+int main() {
     test_chacha_block();
-
     return 0;
 }
