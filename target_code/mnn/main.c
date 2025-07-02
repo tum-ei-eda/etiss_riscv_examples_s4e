@@ -24,6 +24,7 @@ int main()
     uint32_t v4i8weights4 = 0x80818283;  // (-128 -127 -126 -125 | +128 +129 +130 +131) -> 0b10000000_10000001_10000010_10000011
     uint32_t unpacked = 0;
 
+    // --- Test 8 -> 16 bit SIMD Sign-Extend Instructions ---
     asm volatile("mnn.exths.b10 %0, %1" : "=r" (unpacked) : "r" (v4i8weights));
     printf("unpacked[mnn.exths.b10] = %08x\n", unpacked);    // expect 0x0001_0000
     asm volatile("mnn.exths.b20 %0, %1" : "=r" (unpacked) : "r" (v4i8weights));
@@ -76,6 +77,7 @@ int main()
     asm volatile("mnn.exths.b32 %0, %1" : "=r" (unpacked) : "r" (v4i8weights4));
     printf("unpacked[mnn.exths.b32] = %08x\n", unpacked);    // expect 0xff80_ff81
 
+    // --- Test 8 -> 16 bit SIMD Zero-Extend Instructions ---
     asm volatile("mnn.exthz.b10 %0, %1" : "=r" (unpacked) : "r" (v4i8weights));
     printf("unpacked[mnn.exthz.b10] = %08x\n", unpacked);    // expect 0x0001_0000
     asm volatile("mnn.exthz.b20 %0, %1" : "=r" (unpacked) : "r" (v4i8weights));
@@ -127,4 +129,31 @@ int main()
     printf("unpacked[mnn.exthz.b31] = %08x\n", unpacked);    // expect 0x0080_0082
     asm volatile("mnn.exthz.b32 %0, %1" : "=r" (unpacked) : "r" (v4i8weights4));
     printf("unpacked[mnn.exthz.b32] = %08x\n", unpacked);    // expect 0x0080_0081
+
+    // --- Test MAC Instruction ---
+    int32_t acc = 0;
+    volatile int32_t a[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+    volatile int32_t b[8] = {-8, -4, -2, 0, 2, 4, 6, 8};
+
+    // Inline ASM
+    for(int i = 0; i < 8; i++) {
+        asm volatile("mnn.mac %0, %1, %2" : "+r" (acc) : "r" (a[i]), "r" (b[i]));
+    }
+    printf("acc = %d (expected=118)\n", acc);
+
+    // Pattern (Implicit)
+    acc = 0;
+    for(int i = 0; i < 8; i++) {
+        acc += a[i] * b[i];
+    }
+    printf("acc = %d (expected=118)\n", acc);
+
+
+    // Intrinsic
+    // TODO
+    acc = 0;
+    for(int i = 0; i < 8; i++) {
+        acc = __builtin_riscv_xmnn_mac(acc, a[i], b[i]);
+    }
+    printf("acc = %d (expected=118)\n", acc);
 }
