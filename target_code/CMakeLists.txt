@@ -26,7 +26,7 @@ macro(add_executable_etiss_bylib TARGET OLIB)
 endmacro()
 
 add_subdirectory(chacha20)
-#add_subdirectory(hello_world)
+add_subdirectory(hello_world)
 add_subdirectory(test_cases)
 add_subdirectory(interactive)
 add_subdirectory(semihosting_cpp)
