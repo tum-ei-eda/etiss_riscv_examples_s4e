@@ -17,7 +17,7 @@ macro(add_executable_etiss TARGET)
 
 	# Install dir variant
 	set(ELF_PATH "${CMAKE_INSTALL_PREFIX}/bin/${BIN_NAME}")
-	set(INI_INSTALL ${CMAKE_CURRENT_BINARY_DIR}/temp/${TARGET}.ini OPTIONAL)
+	set(INI_INSTALL ${CMAKE_CURRENT_BINARY_DIR}/temp/${TARGET}.ini)
 	configure_file(${ETISS_ELFINI} ${INI_INSTALL} @ONLY)
 
 	install(FILES ${INI_INSTALL} DESTINATION ini OPTIONAL)
