@@ -120,7 +120,8 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        submodules: ['false', recursive]
+        # submodules: ['false', recursive]
+        submodules: ['false']
         build_type: [Release, Debug]
         config:
           # TODO: Seal5 LLVM, Non-Multilib
@@ -174,15 +175,15 @@ jobs:
           cd llvm
           tar xf ../${{ matrix.config.llvm_archive }} --strip-components ${{ matrix.config.llvm_strip }}
           ls
-      - name: CMake config (GCC)
-        if: ${{ matrix.config.toolchain == 'gcc' }}
-        run: |
-          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=rv${{ matrix.config.bits }}gc-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=${{ matrix.config.gnu_name }} -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=$(pwd)/build/install -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DRISCV_ARCH=${{ matrix.config.arch }} -DRISCV_ABI=${{ matrix.config.abi }}
+      # - name: CMake config (GCC)
+      #   if: ${{ matrix.config.toolchain == 'gcc' }}
+      #   run: |
+      #     cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=rv${{ matrix.config.bits }}gc-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=${{ matrix.config.gnu_name }} -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=$(pwd)/build/install -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DRISCV_ARCH=${{ matrix.config.arch }} -DRISCV_ABI=${{ matrix.config.abi }}
       - name: CMake config (LLVM)
         if: ${{ matrix.config.toolchain == 'llvm' }}
         run: |
           export PATH=$(pwd)/llvm/bin:/usr/lib/llvm-20/bin:$PATH
-          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=rv${{ matrix.config.bits }}gc-llvm-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=${{ matrix.config.gnu_name }} -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=$(pwd)/build/install -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DRISCV_ARCH=${{ matrix.config.arch }} -DRISCV_ABI=${{ matrix.config.abi }}
+          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=rv${{ matrix.config.bits }}gc-llvm-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=${{ matrix.config.gnu_name }} -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=$(pwd)/build/install -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DRISCV_ARCH=${{ matrix.config.arch }} -DRISCV_ABI=${{ matrix.config.abi }} -DS4EMAC=ON -DTVM=OFF -DTFLM=OFF
       - name: CMake build (single)
         run: |
           export PATH=$(pwd)/llvm/bin:/usr/lib/llvm-20/bin:$PATH
