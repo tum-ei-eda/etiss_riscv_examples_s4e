@@ -24,11 +24,25 @@ macro(add_executable_etiss TARGET)
 	install(TARGETS ${TARGET} DESTINATION bin OPTIONAL)
 endmacro()
 
+macro(add_executable_etiss_bylib TARGET OLIB)
+	add_executable(${TARGET} $<TARGET_OBJECTS:${OLIB}>)
+	add_dependencies(${TARGET} etiss_crt0)
+	target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR}/riscv_crt0)
+	set(BIN_NAME ${TARGET})
+
+	configure_file(${ETISS_ELFINI} ${TARGET}.ini @ONLY)
+
+	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}.ini DESTINATION ini)
+	install(TARGETS ${TARGET} DESTINATION bin)
+endmacro()
+
+
 option(EMBENCH "EMBENCH" ON)
 option(MURISCVNN "MURISCVNN" ON)
 option(TVM "TVM" ON)
 option(TFLM "TFLM" ON)
 option(S4EMAC "S4EMAC" ON)
+option(CHACHA20 "CHACHA20" ON)
 
 add_subdirectory(hello_world)
 add_subdirectory(test_cases)
@@ -48,4 +62,7 @@ if(EMBENCH)
 endif()
 if(S4EMAC)
 	add_subdirectory(s4emac)
+endif()
+if(CHACHA20)
+  add_subdirectory(chacha20)
 endif()
