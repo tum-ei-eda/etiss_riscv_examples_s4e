@@ -16,21 +16,39 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 ##
-
+---
 name: Trigger Seal5 ETISS Test Flow
-
 on:
   push:
-    branches: [ "s4emac" ]
-
+    branches: [master]
+    paths:
+      - target_code/**
+      - riscv_crt0/**
+      - 3rdparty/**
+      - cmake/**
+      - CMakeLists.txt
+      - '*.cmake'
+      - '*.in'
+      - '*.specs'
+      - .github/workflows/**
+      - .github/actions/**
 jobs:
   trigger_repo:
     runs-on: ubuntu-latest
     steps:
-    - name: Trigger Seal5 ETISS Test Flow
+    - name: Trigger Seal5 ETISS Test Flow (S4E)
+      if: github.repository == 'tum-ei-eda/etiss_riscv_examples_s4e'
       uses: peter-evans/repository-dispatch@v3
       with:
          token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
          repository: tum-ei-eda/seal5_etiss_test_env
          event-type: s4e-examples-event
          client-payload: '{"triggered_run_id": "${{ github.run_id }}", "ref": "${{ github.sha }}", "from": "s4e-examples"}'
+    - name: Trigger Seal5 ETISS Test Flow (Default)
+      if: github.repository == 'tum-ei-eda/etiss_riscv_examples'
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
+        repository: tum-ei-eda/seal5_etiss_test_env
+        event-type: examples-event
+        client-payload: '{"triggered_run_id": "${{ github.run_id }}", "ref": "${{ github.sha }}", "from": "examples"}'

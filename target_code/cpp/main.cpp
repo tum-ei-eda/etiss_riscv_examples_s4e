@@ -3,7 +3,9 @@
 #include <iostream>
 #include <memory>
 #include <chrono>
+#ifdef __riscv_a
 #include <atomic>
+#endif  // __riscv_a
 
 class Foo
 {
@@ -75,7 +77,7 @@ int main()
     int expected = 5;
     if (ai.compare_exchange_strong(expected, 6))
         printf("got expected atomic\n");
-#endif
+#endif  // __riscv_a
 
     // Correctly terminates with pure virtual call error.
     // VooDoo vd;
