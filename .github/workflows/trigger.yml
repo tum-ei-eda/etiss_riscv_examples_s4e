@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
----
->>>>>>> upstream/master
 ##
 ## Copyright (c) 2024 TUM Department of Electrical and Computer Engineering.
 ##
@@ -20,6 +16,7 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 ##
+---
 name: Trigger Seal5 ETISS Test Flow
 on:
   push:
