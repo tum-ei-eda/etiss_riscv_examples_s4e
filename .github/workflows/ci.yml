@@ -165,7 +165,16 @@ jobs:
       - name: Install Clang/LLVM
         if: ${{ matrix.config.toolchain == 'llvm' }}
         run: sudo apt install clang
+      - name: Download Cached GCC Binaries
+        id: cache-gcc
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-gcc-binaries
+        with:
+          path: riscv_tc
+          key: gcc-binaries-${{ matrix.config.gnu_url }}-${{ matrix.config.gnu_archive }}
       - name: Install cross compiler
+        if: steps.cache-gcc.outputs.cache-hit != 'true'
         run: |
           wget -q ${{ matrix.config.gnu_url }}/${{ matrix.config.gnu_archive }}
           ls
@@ -173,6 +182,14 @@ jobs:
           cd riscv_tc
           tar xf ../${{ matrix.config.gnu_archive }} --strip-components ${{ matrix.config.gnu_strip }}
           ls
+      - name: Download Cached LLVM Binaries
+        id: cache-llvm
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-llvm-binaries
+        with:
+          path: llvm/  # TODO: move?
+          key: llvm-binaries-${{ matrix.config.llvm_url }}-${{ matrix.config.llvm_archive }}
       - name: Install System LLVM
         if: ${{ matrix.config.toolchain == 'llvm' &&  matrix.config.llvm_system == 'true' }}
         run: |
@@ -184,7 +201,7 @@ jobs:
           # sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-20 100
           # clang --version
       - name: Install Custom LLVM
-        if: ${{ matrix.config.toolchain == 'llvm' && matrix.config.llvm_system != 'true' }}
+        if: ${{ matrix.config.toolchain == 'llvm' && matrix.config.llvm_system != 'true' && steps.cache-llvm.outputs.cache-hit != 'true'}}
         run: |
           wget -q ${{ matrix.config.llvm_url }}/${{ matrix.config.llvm_archive }}
           ls
