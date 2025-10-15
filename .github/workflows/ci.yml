@@ -125,17 +125,17 @@ jobs:
         build_type: [Release, Debug]
         config:
           # TODO: Seal5 LLVM, Non-Multilib
-          - {bits: 32, arch: rv32gc, abi: ilp32d, toolchain: llvm, gnu_name: riscv32-unknown-elf,
+          - {bits: 32, arch: rv32gcxs4emac, abi: ilp32d, toolchain: llvm, gnu_name: riscv32-unknown-elf,
              gnu_url: https://github.com/PhilippvK/riscv-tools/releases/download/gnu_2025.06.13,
              gnu_archive: riscv32-unknown-elf-ubuntu-22.04-rv32gc_ilp32d.tar.xz, gnu_strip: 0,
-             llvm_system: 'false', llvm_url: https://github.com/PhilippvK/riscv-tools/releases/download/llvm_20.1.8/,
-             llvm_archive: clang+llvm-20.1.8-x86_64-linux-gnu-ubuntu-22.04.tar.xz,
+             llvm_system: 'false', llvm_url: https://github.com/PhilippvK/riscv-tools/releases/download/seal5_llvm_s4e_18.1.0/,
+             llvm_archive: clang+llvm-18.1.0-x86_64-linux-gnu-ubuntu-22.04.tar.xz,
              llvm_strip: 0}
-          - {bits: 32, arch: rv32im_zicsr_zifencei, abi: ilp32, toolchain: llvm, gnu_name: riscv32-unknown-elf,
+          - {bits: 32, arch: rv32imxs4emac_zicsr_zifencei, abi: ilp32, toolchain: llvm, gnu_name: riscv32-unknown-elf,
              gnu_url: https://github.com/PhilippvK/riscv-tools/releases/download/gnu_2025.06.13,
              gnu_archive: riscv32-unknown-elf-ubuntu-22.04-rv32im_zicsr_zifencei_ilp32.tar.xz,
-             gnu_strip: 0, llvm_system: 'false', llvm_url: https://github.com/PhilippvK/riscv-tools/releases/download/llvm_20.1.8/,
-             llvm_archive: clang+llvm-20.1.8-x86_64-linux-gnu-ubuntu-22.04.tar.xz,
+             gnu_strip: 0, llvm_system: 'false', llvm_url: https://github.com/PhilippvK/riscv-tools/releases/download/seal5_llvm_s4e_18.1.0/,
+             llvm_archive: clang+llvm-18.1.0-x86_64-linux-gnu-ubuntu-22.04.tar.xz,
              llvm_strip: 0}
     steps:
       - uses: actions/checkout@v4
