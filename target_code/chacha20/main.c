@@ -8,6 +8,17 @@ static inline uint32_t rol(uint32_t a, int n) {
 }
 
 
+#if CHACHA_INTRINSICS
+
+static inline void quarter_round(uint32_t* v, int a, int b, int c, int d) {
+    v[a] += v[b]; v[d] = __builtin_riscv_xchacha_xorrol16(v[d], v[a]);
+    v[c] += v[d]; v[b] = __builtin_riscv_xchacha_xorrol12(v[b], v[c]);
+    v[a] += v[b]; v[d] = __builtin_riscv_xchacha_xorrol8( v[d], v[a]);
+    v[c] += v[d]; v[b] = __builtin_riscv_xchacha_xorrol7( v[b], v[c]);
+}
+
+#else
+
 static inline void quarter_round(uint32_t* v, int a, int b, int c, int d) {
     v[a] += v[b]; v[d] ^= v[a]; v[d] = rol(v[d], 16);
     v[c] += v[d]; v[b] ^= v[c]; v[b] = rol(v[b], 12);
@@ -15,6 +26,7 @@ static inline void quarter_round(uint32_t* v, int a, int b, int c, int d) {
     v[c] += v[d]; v[b] ^= v[c]; v[b] = rol(v[b],  7);
 }
 
+#endif
 
 void double_rounds(uint32_t output[16], const uint32_t input[16]) {
     // Copy initial state into the state matrix
@@ -48,6 +60,11 @@ void double_rounds(uint32_t output[16], const uint32_t input[16]) {
 // page 7 of
 // https://www.ietf.org/archive/id/draft-strombergson-chacha-test-vectors-01.txt
 bool test_chacha_block() {
+#if CHACHA_INTRINSICS
+    printf("*** Direct use of chacha20 intrinsics ***\n");
+#else
+    printf("*** chacha20 instruction selection ***\n");
+#endif
     // Initialise state with standard 256-bit-key constant and otherwise zero
     uint32_t iv[16];
     iv[0] = 0x61707865;
